@@ -18,10 +18,10 @@ import java.util.Iterator;
 
 import org.gflogger.helpers.LogLog;
 
-import static com.sun.corba.se.impl.util.JDKBridge.loadClass;
 import static org.gflogger.helpers.OptionConverter.getStringProperty;
 import static org.gflogger.util.StackTraceUtils.getCodeLocation;
 import static org.gflogger.util.StackTraceUtils.getImplementationVersion;
+import static org.gflogger.util.StackTraceUtils.loadClass;
 
 /**
  * AbstractLocalLogEntry

@@ -19,8 +19,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
 
+import jdk.internal.math.FloatingDecimal;
 import org.gflogger.util.DirectBufferUtils;
-import sun.misc.FloatingDecimal;
 
 /**
  * BufferFormatter
