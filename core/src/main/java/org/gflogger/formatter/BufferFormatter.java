@@ -19,7 +19,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
 
-import jdk.internal.math.FloatingDecimal;
 import org.gflogger.util.DirectBufferUtils;
 
 /**
@@ -802,7 +801,8 @@ public class BufferFormatter {
 	private static String toString(double v) {
 		// All exceptional cases have been covered
 		// TODO: this leads to garbage
-		final String javaFormatString = FloatingDecimal.toJavaFormatString(v);
+//		final String javaFormatString = FloatingDecimal.toJavaFormatString(v);
+		final String javaFormatString = String.valueOf(v);
 		return javaFormatString;
 	}
 

@@ -14,7 +14,6 @@
 
 package org.gflogger.appender;
 
-
 import java.io.Flushable;
 import java.io.IOException;
 

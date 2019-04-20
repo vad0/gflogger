@@ -14,7 +14,6 @@
 
 package org.gflogger.helpers;
 
-
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 

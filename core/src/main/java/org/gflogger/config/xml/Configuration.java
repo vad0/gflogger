@@ -14,7 +14,6 @@
 
 package org.gflogger.config.xml;
 
-
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -43,13 +42,13 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class Configuration extends DefaultHandler {
 
-	private final Stack<Object>					stack				= new Stack<Object>();
+	private final Stack<Object>					stack				= new Stack<>();
 
-	private final Map<String, AppenderFactory>	appenderFactories	= new LinkedHashMap<String, AppenderFactory>();
+	private final Map<String, AppenderFactory>	appenderFactories	= new LinkedHashMap<>();
 
-	private final List<GFLoggerBuilder>			loggerBuilders		= new ArrayList<GFLoggerBuilder>();
+	private final List<GFLoggerBuilder>			loggerBuilders		= new ArrayList<>();
 
-	private final Map<Class, ObjectFormatter>	objectFormatters	= new LinkedHashMap<Class, ObjectFormatter>();
+	private final Map<Class, ObjectFormatter>	objectFormatters	= new LinkedHashMap<>();
 
 	private LoggerServiceFactory				loggerServiceFactory;
 
@@ -200,20 +199,27 @@ public class Configuration extends DefaultHandler {
 	throws SAXException {
 		debug("start element:" + qName);
 		try {
-			if (qName.equals("appender")) {
-				startAppender(attributes);
-			} else if (qName.equals("layout")) {
-				startLayout(attributes);
-			} else if (qName.equals("service")) {
-				startLoggerService(attributes);
-			} else if (qName.equals("object-formatter")) {
-				startObjectFormatter(attributes);
-			} else if (qName.equals("appender-ref")) {
-				startAppenderRef(attributes);
-			} else if (qName.equals("logger")) {
-				startLogger(attributes);
-			} else if (qName.equals("root")) {
-				startLogger(attributes);
+			switch (qName) {
+				case "appender":
+					startAppender(attributes);
+					break;
+				case "layout":
+					startLayout(attributes);
+					break;
+				case "service":
+					startLoggerService(attributes);
+					break;
+				case "object-formatter":
+					startObjectFormatter(attributes);
+					break;
+				case "appender-ref":
+					startAppenderRef(attributes);
+					break;
+				case "logger":
+				case "root":
+					startLogger(attributes);
+					break;
+				default:
 			}
 		} catch (Exception e) {
 			throw new SAXException(e);
@@ -221,14 +227,17 @@ public class Configuration extends DefaultHandler {
 	}
 
 	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
+	public void endElement(String uri, String localName, String qName) {
 		debug("end element:" + qName);
-		if (qName.equals("appender-factory")) {
-			endAppenderFactory();
-		} else if (qName.equals("logger")) {
-			endLogger();
-		} else if (qName.equals("root")) {
-			endLogger();
+		switch (qName) {
+			case "appender-factory":
+				endAppenderFactory();
+				break;
+			case "logger":
+			case "root":
+				endLogger();
+				break;
+			default:
 		}
 	}
 

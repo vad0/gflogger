@@ -18,7 +18,6 @@ import java.nio.ByteBuffer;
 
 import com.lmax.disruptor.util.Util;
 import sun.misc.Unsafe;
-import sun.nio.ch.DirectBuffer;
 
 import static org.gflogger.formatter.BufferFormatter.BDIGITS;
 import static org.gflogger.formatter.BufferFormatter.BDIGIT_ONES;
@@ -239,16 +238,16 @@ public final class Bytes {
 	}
 
 	public void copyTo(ByteBuffer buffer) {
-		if (buffer.isDirect() && pos > JNI_COPY_FROM_ARRAY_THRESHOLD) {
-			DirectBuffer db = (DirectBuffer) buffer;
-
-			copyFromArray(bs, arrayBaseOffset, 0 << 0,
-				db.address(), pos << 0);
-
-			buffer.position(buffer.position() + pos);
-		} else {
+//		if (buffer.isDirect() && pos > JNI_COPY_FROM_ARRAY_THRESHOLD) {
+//			DirectBuffer db = (DirectBuffer) buffer;
+//
+//			copyFromArray(bs, arrayBaseOffset, 0 << 0,
+//				db.address(), pos << 0);
+//
+//			buffer.position(buffer.position() + pos);
+//		} else {
 			buffer.put(bs, 0, pos);
-		}
+//		}
 	}
 
 	private static final Unsafe UNSAFE = Util.getUnsafe();
