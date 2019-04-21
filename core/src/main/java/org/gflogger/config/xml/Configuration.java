@@ -36,23 +36,22 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- *
  * @author Harald Wendel
  * @author Vladimir Dolzhenko, vladimir.dolzhenko@gmail.com
  */
 public class Configuration extends DefaultHandler {
 
-	private final Stack<Object>					stack				= new Stack<>();
+	private final Stack<Object> stack = new Stack<>();
 
-	private final Map<String, AppenderFactory>	appenderFactories	= new LinkedHashMap<>();
+	private final Map<String, AppenderFactory> appenderFactories = new LinkedHashMap<>();
 
-	private final List<GFLoggerBuilder>			loggerBuilders		= new ArrayList<>();
+	private final List<GFLoggerBuilder> loggerBuilders = new ArrayList<>();
 
-	private final Map<Class, ObjectFormatter>	objectFormatters	= new LinkedHashMap<>();
+	private final Map<Class, ObjectFormatter> objectFormatters = new LinkedHashMap<>();
 
-	private LoggerServiceFactory				loggerServiceFactory;
+	private LoggerServiceFactory loggerServiceFactory;
 
-	private LoggerService						loggerService;
+	private LoggerService loggerService;
 
 	public Map<String, AppenderFactory> getAppenderFactories() {
 		return appenderFactories;
@@ -60,10 +59,10 @@ public class Configuration extends DefaultHandler {
 
 	public LoggerService getLoggerService() {
 		if (loggerService == null) {
-			for (final AppenderFactory appenderFactory: appenderFactories.values()) {
+			for (final AppenderFactory appenderFactory : appenderFactories.values()) {
 				loggerServiceFactory.addAppenderFactory(appenderFactory);
 			}
-			for (final GFLoggerBuilder loggerBuilder: loggerBuilders) {
+			for (final GFLoggerBuilder loggerBuilder : loggerBuilders) {
 				loggerServiceFactory.addGFLoggerBuilder(loggerBuilder);
 			}
 
@@ -90,16 +89,16 @@ public class Configuration extends DefaultHandler {
 
 		//TODO RC: allow to specify plain Appender implementation as class,
 		// in addition of factory style.
-		final Class factoryClazz = Class.forName( factoryClassName );
+		final Class factoryClazz = Class.forName(factoryClassName);
 		final AppenderFactory appenderFactory = (AppenderFactory) factoryClazz.newInstance();
 
-		for ( final PropertyDescriptor property : BeanUtils.classProperties( factoryClazz ) ) {
-			if ( property.getWriteMethod() != null ) {
+		for (final PropertyDescriptor property : BeanUtils.classProperties(factoryClazz)) {
+			if (property.getWriteMethod() != null) {
 				final String propertyName = property.getName();
 				//TODO RC: skip 'name' and 'class' properties?
-				final String attributeValue = getAttribute( attributes, propertyName );
-				if ( attributeValue != null ) { //property is writeable
-					BeanUtils.setPropertyStringValue( appenderFactory, property, attributeValue );
+				final String attributeValue = getAttribute(attributes, propertyName);
+				if (attributeValue != null) { //property is writeable
+					BeanUtils.setPropertyStringValue(appenderFactory, property, attributeValue);
 				}
 			}
 		}
@@ -113,29 +112,29 @@ public class Configuration extends DefaultHandler {
 
 	private void startLayout(Attributes attributes) throws Exception {
 		final String className = getAttribute(attributes, "class");
-		final String pattern  = getAttribute(attributes, "pattern");
+		final String pattern = getAttribute(attributes, "pattern");
 		final String timeZoneId = getAttribute(attributes, "timeZoneId");
 		final String language = getAttribute(attributes, "language");
 		final Class clazz = Class.forName(className);
 		final Constructor constructor = clazz.getConstructor(String.class,
 				String.class, String.class);
-		final Layout layout = (Layout)constructor.newInstance(pattern, timeZoneId, language);
-		BeanUtils.setPropertyValue( stack.peek(), "layout", layout );
+		final Layout layout = (Layout) constructor.newInstance(pattern, timeZoneId, language);
+		BeanUtils.setPropertyValue(stack.peek(), "layout", layout);
 	}
 
 	private void startLoggerService(Attributes attributes) throws Exception {
 		final String className = getAttribute(attributes, "class");
 		final Class clazz = className != null
-			? Class.forName(className)
-			: DLoggerServiceFactory.class;
-		loggerServiceFactory = (LoggerServiceFactory)clazz.newInstance();
-		for ( final PropertyDescriptor property : BeanUtils.classProperties( clazz ) ) {
+				? Class.forName(className)
+				: DLoggerServiceFactory.class;
+		loggerServiceFactory = (LoggerServiceFactory) clazz.newInstance();
+		for (final PropertyDescriptor property : BeanUtils.classProperties(clazz)) {
 			final String propertyName = property.getName();
-			if ( property.getWriteMethod() != null ) {
+			if (property.getWriteMethod() != null) {
 				BeanUtils.setPropertyStringValue(
 						loggerServiceFactory,
 						property,
-						getAttribute( attributes, propertyName )
+						getAttribute(attributes, propertyName)
 				);
 			}
 		}
@@ -161,19 +160,19 @@ public class Configuration extends DefaultHandler {
 			debug("No AppenderFactory '" + name + "' found");
 			return;
 		}
-		((GFLoggerBuilder)stack.peek()).addAppenderFactory(appenderFactory);
+		((GFLoggerBuilder) stack.peek()).addAppenderFactory(appenderFactory);
 	}
 
 	private void startLogger(Attributes attributes) throws Exception {
 		final GFLoggerBuilder builder = new GFLoggerBuilder();
 
-		for ( final PropertyDescriptor property : BeanUtils.classProperties( builder.getClass() ) ) {
+		for (final PropertyDescriptor property : BeanUtils.classProperties(builder.getClass())) {
 			final String propertyName = property.getName();
-			if ( property.getWriteMethod() != null ) {
+			if (property.getWriteMethod() != null) {
 				BeanUtils.setPropertyStringValue(
 						builder,
 						property,
-						getAttribute( attributes, propertyName )
+						getAttribute(attributes, propertyName)
 				);
 			}
 		}
@@ -186,7 +185,7 @@ public class Configuration extends DefaultHandler {
 	}
 
 	private void endLogger() {
-		final GFLoggerBuilder gfLogger = (GFLoggerBuilder)stack.peek();
+		final GFLoggerBuilder gfLogger = (GFLoggerBuilder) stack.peek();
 		loggerBuilders.add(gfLogger);
 	}
 
@@ -196,7 +195,7 @@ public class Configuration extends DefaultHandler {
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes)
-	throws SAXException {
+			throws SAXException {
 		debug("start element:" + qName);
 		try {
 			switch (qName) {
